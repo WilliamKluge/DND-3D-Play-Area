@@ -11,7 +11,7 @@ CONNECTION_PEG_DIAMETER = SQUARE_SIZE*0.75;
 /** Height of the connection peg */
 CONNECTION_PEG_HEIGHT = TILE_THICKNESS/2;
 /** Height of connection columns (for multi-level buildings this is the standard height of one floor) */
-CONNECTION_COLUMN_HEIGHT = SQUARE_SIZE*4;
+CONNECTION_COLUMN_HEIGHT = SQUARE_SIZE*3;
 /** Whether the dip should come outside the square size or if it should be included */
 DIP_OUTSIDE_SQUARE = false; // Some things are currently not configured for the dip being outside the square
 

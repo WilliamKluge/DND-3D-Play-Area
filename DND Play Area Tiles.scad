@@ -57,14 +57,25 @@ module connection_tile(_center=false,_bothsides=false) {
 }
 
 /**
+ * TODO this should just be an option on the regular connection tile, but for now it'll be here
+ */
+module flipped_connection_tile() {
+    rotate([180,0,0])
+        translate([0,-SQUARE_SIZE,-TILE_THICKNESS])
+            connection_tile();
+}
+
+/**
  * @brief Column for connecting pieces vertically
  */
 module connection_column() {
-    connection_shape();
-    translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT/2])
-        cube([SQUARE_SIZE,SQUARE_SIZE,CONNECTION_COLUMN_HEIGHT],true);
-    translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT])
-    connection_shape();
+    translate([SQUARE_SIZE/2,SQUARE_SIZE/2,0]) {
+        connection_shape();
+        translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT/2])
+            cube([SQUARE_SIZE,SQUARE_SIZE,CONNECTION_COLUMN_HEIGHT],true);
+        translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT])
+        connection_shape();
+    }
 }
 
 /**
