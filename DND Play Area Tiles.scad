@@ -11,15 +11,15 @@ include <DND Play Area Config.scad>;
 
 /**
  * @brief Basic tile to use for floors
- * @param center Whether or not to center the tile
+ * @param _center Whether or not to center the tile
  */
-module basic_tile(_center=false) {
+module basic_tile(_center=false, _thickness=1) {
     if (DIP_OUTSIDE_SQUARE) {
         difference() {
             // Main tile piece
-            cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,TILE_THICKNESS],_center);
+            cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,TILE_THICKNESS*_thickness],_center);
             // Tile dip
-            translate([0,0,TILE_THICKNESS-DIP_DIMENSIONS])
+            translate([0,0,(TILE_THICKNESS*_thickness)-DIP_DIMENSIONS])
                 difference() {
                     cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,DIP_DIMENSIONS],_center);
                 translate([DIP_DIMENSIONS/2,DIP_DIMENSIONS/2,0])
@@ -29,9 +29,9 @@ module basic_tile(_center=false) {
     } else {
         difference() {
             // Main tile piece
-            cube([SQUARE_SIZE,SQUARE_SIZE,TILE_THICKNESS],_center);
+            cube([SQUARE_SIZE,SQUARE_SIZE,TILE_THICKNESS*_thickness],_center);
             // Tile dip
-            translate([0,0,TILE_THICKNESS-DIP_DIMENSIONS])
+            translate([0,0,(TILE_THICKNESS*_thickness)-DIP_DIMENSIONS])
                 difference() {
                     cube([SQUARE_SIZE,SQUARE_SIZE,DIP_DIMENSIONS],_center);
                     translate([DIP_DIMENSIONS/2,DIP_DIMENSIONS/2,0])
@@ -51,8 +51,8 @@ module connection_tile(_center=false,_bothsides=false) {
     difference() {
         basic_tile(_center);
         translate([translate_amount,translate_amount,_bothsides ? 0 : TILE_THICKNESS/2])
-        scale([1,1,_bothsides ? 2 : 1])
-            connection_shape(_center);
+            scale([1,1,_bothsides ? 2 : 1])
+                connection_shape(_center);
     }
 }
 
@@ -67,14 +67,20 @@ module flipped_connection_tile() {
 
 /**
  * @brief Column for connecting pieces vertically
+ * @param _connection_column_height Height of the column in play area squares
+ * @param _top_connector If the connection piece on the top should be included
+ * @param _bottom_connector If the connection piece on the bottom should be included
  */
-module connection_column() {
+module connection_column(_connection_column_height=CONNECTION_COLUMN_HEIGHT,_top_connector=true,_bottom_connector=true) {
+    connection_column_height=SQUARE_SIZE*_connection_column_height;
     translate([SQUARE_SIZE/2,SQUARE_SIZE/2,0]) {
-        connection_shape();
-        translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT/2])
-            cube([SQUARE_SIZE,SQUARE_SIZE,CONNECTION_COLUMN_HEIGHT],true);
-        translate([0,0,CONNECTION_PEG_HEIGHT+CONNECTION_COLUMN_HEIGHT])
-        connection_shape();
+        if (_bottom_connector)
+            connection_shape();
+        translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height/2])
+            cube([SQUARE_SIZE,SQUARE_SIZE,connection_column_height],true);
+        if (_top_connector)
+            translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height])
+                connection_shape();
     }
 }
 
