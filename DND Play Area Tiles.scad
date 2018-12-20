@@ -13,25 +13,25 @@ include <DND Play Area Config.scad>;
  * @brief Basic tile to use for floors
  * @param _center Whether or not to center the tile
  */
-module basic_tile(_center=false, _thickness=1) {
+module basic_tile(_center=false, _thickness=TILE_THICKNESS) {
     if (DIP_OUTSIDE_SQUARE) {
         difference() {
             // Main tile piece
-            cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,TILE_THICKNESS*_thickness],_center);
+            cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,_thickness],_center);
             // Tile dip
             translate([0,0,(TILE_THICKNESS*_thickness)-DIP_DIMENSIONS])
                 difference() {
                     cube([SQUARE_SIZE+DIP_DIMENSIONS,SQUARE_SIZE+DIP_DIMENSIONS,DIP_DIMENSIONS],_center);
-                translate([DIP_DIMENSIONS/2,DIP_DIMENSIONS/2,0])
-                    cube([SQUARE_SIZE,SQUARE_SIZE,DIP_DIMENSIONS],_center);
+                    translate([DIP_DIMENSIONS/2,DIP_DIMENSIONS/2,0])
+                        cube([SQUARE_SIZE,SQUARE_SIZE,DIP_DIMENSIONS],_center);
                 }
         }
     } else {
         difference() {
             // Main tile piece
-            cube([SQUARE_SIZE,SQUARE_SIZE,TILE_THICKNESS*_thickness],_center);
+            cube([SQUARE_SIZE,SQUARE_SIZE,_thickness],_center);
             // Tile dip
-            translate([0,0,(TILE_THICKNESS*_thickness)-DIP_DIMENSIONS])
+            translate([0,0,_thickness-DIP_DIMENSIONS])
                 difference() {
                     cube([SQUARE_SIZE,SQUARE_SIZE,DIP_DIMENSIONS],_center);
                     translate([DIP_DIMENSIONS/2,DIP_DIMENSIONS/2,0])
@@ -71,16 +71,23 @@ module flipped_connection_tile() {
  * @param _top_connector If the connection piece on the top should be included
  * @param _bottom_connector If the connection piece on the bottom should be included
  */
-module connection_column(_connection_column_height=CONNECTION_COLUMN_HEIGHT,_top_connector=true,_bottom_connector=true) {
+module connection_column(_connection_column_height=CONNECTION_COLUMN_HEIGHT,_top_connector=true,_bottom_connector=true,_center=false) {
     connection_column_height=SQUARE_SIZE*_connection_column_height;
-    translate([SQUARE_SIZE/2,SQUARE_SIZE/2,0]) {
-        if (_bottom_connector)
-            connection_shape();
+    if (_bottom_connector)
+        connection_shape(_center=true);
+    if (_top_connector) {
         translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height/2])
-            cube([SQUARE_SIZE,SQUARE_SIZE,connection_column_height],true);
-        if (_top_connector)
-            translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height])
-                connection_shape();
+            cube([SQUARE_SIZE,SQUARE_SIZE,connection_column_height],_center);
+        translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height])
+            connection_shape(_center=false);
+    } else {
+        no_top_column_height = connection_column_height-SQUARE_SIZE-CONNECTION_PEG_HEIGHT;
+        translate([0,0,CONNECTION_PEG_HEIGHT]) {
+            cube([SQUARE_SIZE,SQUARE_SIZE,no_top_column_height],_center);
+            // The x and y translations are to account for a bug with centering the basic tiles
+            translate([0,0,no_top_column_height])
+                basic_tile(_thickness=SQUARE_SIZE,_center=_center);
+        }
     }
 }
 

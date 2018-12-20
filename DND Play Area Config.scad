@@ -17,9 +17,12 @@ DIP_OUTSIDE_SQUARE = false; // Some things are currently not configured for the 
 
 /**
  * @brief This shape is used to connect various pieces together
+ * @param _center Center the connection shape to where it should be to be located in the center of a tile
  */
 module connection_shape(_center=false) {
-    cylinder($fn=6,d=CONNECTION_PEG_DIAMETER,h=CONNECTION_PEG_HEIGHT,center=_center);
+    t_arr = _center ? [CONNECTION_PEG_DIAMETER/2+SQUARE_SIZE/8,CONNECTION_PEG_DIAMETER/2+SQUARE_SIZE/8,0] :[0,0,0] ;
+    translate(t_arr)
+        cylinder($fn=6,d=CONNECTION_PEG_DIAMETER,h=CONNECTION_PEG_HEIGHT);
 }
 
 /**
