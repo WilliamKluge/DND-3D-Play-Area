@@ -72,19 +72,19 @@ module flipped_connection_tile() {
  * @param _bottom_connector If the connection piece on the bottom should be included
  */
 module connection_column(_connection_column_height=CONNECTION_COLUMN_HEIGHT,_top_connector=true,_bottom_connector=true,_center=false) {
-    connection_column_height=SQUARE_SIZE*_connection_column_height;
+    column_offset = _bottom_connector ? CONNECTION_PEG_HEIGHT : 0;
+    connection_column_height=SQUARE_SIZE*_connection_column_height - column_offset;
     if (_bottom_connector)
-        connection_shape(_center=true);
+        connection_shape();
     if (_top_connector) {
-        translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height/2])
+        translate([0,0,column_offset])
             cube([SQUARE_SIZE,SQUARE_SIZE,connection_column_height],_center);
-        translate([0,0,CONNECTION_PEG_HEIGHT+connection_column_height])
-            connection_shape(_center=false);
+        translate([0,0,column_offset+connection_column_height])
+            connection_shape();
     } else {
         no_top_column_height = connection_column_height-SQUARE_SIZE-CONNECTION_PEG_HEIGHT;
         translate([0,0,CONNECTION_PEG_HEIGHT]) {
             cube([SQUARE_SIZE,SQUARE_SIZE,no_top_column_height],_center);
-            // The x and y translations are to account for a bug with centering the basic tiles
             translate([0,0,no_top_column_height])
                 basic_tile(_thickness=SQUARE_SIZE,_center=_center);
         }

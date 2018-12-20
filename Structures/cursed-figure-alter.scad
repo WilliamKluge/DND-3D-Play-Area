@@ -12,16 +12,17 @@ use <../DND Play Area Tiles.scad>;
  */
 module alter_base() {
     tile_rectangle(4,4);
-    connection_column();
-    translate(tile_coordinates(0,3,0))
-        connection_column();
-    translate(tile_coordinates(3,3,0))
-        connection_column();
-    translate(tile_coordinates(3,0,0))
-        connection_column();
-    translate([0,0,TILE_THICKNESS])
+    translate([0,0,TILE_THICKNESS]) {
+        connection_column(_bottom_connector=false);
+        translate(tile_coordinates(0,3,0))
+            connection_column(_bottom_connector=false);
+        translate(tile_coordinates(3,3,0))
+            connection_column(_bottom_connector=false);
+        translate(tile_coordinates(3,0,0))
+            connection_column(_bottom_connector=false);
         translate(tile_coordinates(1,1,0))
             tile_rectangle(2,2);
+    }
 }
 
 /**
@@ -46,7 +47,8 @@ module alter_attachmemt() {
         translate([0,0,TILE_THICKNESS])
             tile_stair();
 }
-
+//render() 
 alter_base();
 translate(tile_coordinates(-3,-3,0))
     alter_attachmemt();
+    
