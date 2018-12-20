@@ -10,6 +10,8 @@ CONNECTION_HOLE_SCALE = 1.05;
 CONNECTION_PEG_DIAMETER = SQUARE_SIZE*0.75;
 /** Height of the connection peg */
 CONNECTION_PEG_HEIGHT = TILE_THICKNESS/2;
+/** Total height that needs to be added to squares to connect them upwards diagonally */
+VERTICAL_TILE_CONNECTION_HEIGHT = CONNECTION_PEG_HEIGHT + DIP_DIMENSIONS;
 /** Height of connection columns in number of squares (for multi-level buildings this is the standard height of one floor) */
 CONNECTION_COLUMN_HEIGHT = 3;
 /** Whether the dip should come outside the square size or if it should be included */
